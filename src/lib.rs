@@ -1,16 +1,25 @@
-use std::{env, process::Command};
+//! Library to get os package manager or to know if system has specific commands
 
+use std::{env, process::Command};
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn it_works() {
         println!("{}", package_manager())
     }
 }
 
+/// Returns the system's package manager, if there is one.
+/// Keep in mind this will only return the name of the package manager, 
+/// so you can't just take the result of the function and use it with `install`, this is because not every pm installs or is used the same way.
+/// # Example
+/// ```
+/// let pm: &str = package_manager()
+/// println!("Your system's package manager is {}!", pm)
+/// ```
 pub fn package_manager() -> &'static str {
     let kernel: &str = env::consts::OS;
     match kernel {
