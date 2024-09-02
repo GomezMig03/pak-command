@@ -8,7 +8,8 @@ mod tests {
 
     #[test]
     fn it_works() {
-        println!("{}", package_manager())
+        let pm: &str = package_manager();
+        println!("Your system's package manager is {}!", pm);
     }
 }
 
@@ -17,8 +18,10 @@ mod tests {
 /// so you can't just take the result of the function and use it with `install`, this is because not every pm installs or is used the same way.
 /// # Example
 /// ```
-/// let pm: &str = package_manager()
-/// println!("Your system's package manager is {}!", pm)
+/// use pak_command::package_manager;
+/// 
+/// let pm: &str = package_manager();
+/// println!("Your system's package manager is {}!", pm);
 /// ```
 pub fn package_manager() -> &'static str {
     let kernel: &str = env::consts::OS;
