@@ -36,6 +36,31 @@ pub fn package_manager() -> &'static str {
     }
 }
 
+pub fn check_command(command: &str) -> bool {
+    let kernel: &str = env::consts::OS;
+    match kernel {
+        "android" | "ios" => return false,
+        "windows" => return check_command_windows(command),
+        _ => return check_command_unix(command)
+    }
+}
+
+fn check_command_unix(command: &str) -> bool {
+    Command::new("command")
+        .arg(command)
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
+fn check_command_windows(command: &str) -> bool {
+    Command::new("where")
+        .arg(command)
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
 fn check_windows() -> &'static str  {
     if check_version_pm("winget") {
         return "winget";
