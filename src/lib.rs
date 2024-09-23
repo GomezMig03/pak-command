@@ -48,6 +48,18 @@ pub fn package_manager() -> &'static str {
     }
 }
 
+
+/// Returns if the given command name exists in current system.
+/// If current system is Android or IOS it will always return false.
+/// # Example
+/// ```
+/// use pak_command::check_command;
+/// 
+/// let first_command: &str = "cd";
+/// let second_command: &str = "unexisting_command";
+/// check_command(first_command); //true
+/// check_command(second_command); //false
+/// ```
 pub fn check_command(command: &str) -> bool {
     let kernel: &str = env::consts::OS;
     match kernel {
