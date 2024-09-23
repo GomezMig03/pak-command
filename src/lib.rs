@@ -9,7 +9,19 @@ mod tests {
     #[test]
     fn it_works() {
         let pm: &str = package_manager();
-        println!("Your system's package manager is {}!", pm);
+        assert!(!pm.is_empty())
+    }
+
+    #[test]
+    fn existing_command() {
+        let com: &str = "cd";
+        assert!(check_command(com))
+    }
+
+    #[test]
+    fn non_existing_command() {
+        let com: &str = "uwu7";
+        assert!(!check_command(com))
     }
 }
 
