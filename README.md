@@ -1,5 +1,5 @@
 # Pak-command
-Library to get os package manager or to know if system has specific commands, this was made just for fun and probably has no use in real production.
+Library to get os package manager, name of distro or to know if system has specific commands.
 
 ## Usage
 ### The ```package_manager``` function returns the system's package manager, if there is one.
@@ -17,4 +17,11 @@ let first_command: &str = "cd";
 let second_command: &str = "unexisting_command";
 check_command(first_command); //true
 check_command(second_command); //false
+```
+### The ```get_os``` function returns current os/distro as a String.
+#### Example
+```
+use pak_command::get_os;
+let user_os = get_os();
+println!("Your operative system is {}", user_os);
 ```

@@ -1,6 +1,7 @@
 //! Library to get os package manager or to know if system has specific commands
 
-use std::{env, process::Command};
+use std::{env, process::Command, fs};
+use std::io::{BufRead, BufReader};
 
 #[cfg(test)]
 mod tests {
@@ -23,6 +24,14 @@ mod tests {
         let com: &str = "uwu7";
         assert!(!check_command(com))
     }
+
+    /* 
+    #[test]
+    fn test_os() {
+        let distro = String::from("Fedora Linux"); //Change this to your os/distro to test
+        assert!(distro == get_os());
+    }
+    */
 }
 
 /// Returns the system's package manager, if there is one.
@@ -66,6 +75,45 @@ pub fn check_command(command: &str) -> bool {
         "android" | "ios" => return false,
         "windows" => return check_command_windows(command),
         _ => return check_command_unix(command)
+    }
+}
+
+/// Returns current os/distro as a String.
+/// #Example
+/// ```
+/// use pak_command::get_os;
+/// 
+/// let user_os = get_os();
+/// println!("Your operative system is {}", user_os);
+/// ```
+pub fn get_os() -> String {
+    let kernel: &str = env::consts::OS;
+    if kernel != "linux" {
+        return String::from(kernel);
+    }
+    let distro = get_distro();
+    return distro;
+}
+
+fn get_distro() -> String {
+    let os_release = fs::File::open("/etc/os-release").expect("os-release file not found");
+    let mut file_reader = BufReader::new(os_release);
+    let mut first_line = String::new();
+
+    match file_reader.read_line(&mut first_line) {
+        Ok(0) => {
+            return String::from("linux");
+        }
+        Ok(_) => {
+            let first_index = first_line.find('"').expect("Failed to read os_release file.") + 1;
+            let second_index = first_line.rfind('"').expect("Failed to read os_release file.");
+            let distro: &str = &first_line[first_index..second_index];
+            return String::from(distro);
+        }
+        Err(error) => {
+            eprint!("Failed to read os_release file, {}", error);
+            return String::from("linux");
+        }
     }
 }
 
